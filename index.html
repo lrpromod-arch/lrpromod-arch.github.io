@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Promod — Web Developer & AI Specialist</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Cabinet+Grotesk:wght@300;400;500;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #03050a;
+  --bg2: #070c14;
+  --bg3: #0c1220;
+  --surface: rgba(255,255,255,0.032);
+  --surface2: rgba(255,255,255,0.055);
+  --accent: #5affc2;
+  --accent2: #4db8ff;
+  --accent3: #c97bff;
+  --gold: #f0c060;
+  --text: #eef2f8;
+  --muted: #6b7d93;
+  --muted2: #8fa0b5;
+  --border: rgba(255,255,255,0.06);
+  --border2: rgba(255,255,255,0.1);
+  --r: 14px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Outfit',sans-serif;
+  overflow-x:hidden;
+  cursor:none;
+}
+
+/* CUSTOM CURSOR */
+.cursor{
+  position:fixed;width:10px;height:10px;
+  background:var(--accent);border-radius:50%;
+  pointer-events:none;z-index:9999;
+  transform:translate(-50%,-50%);
+  transition:transform 0.1s,width 0.3s,height 0.3s,background 0.3s;
+  mix-blend-mode:difference;
+}
+.cursor-ring{
+  position:fixed;width:36px;height:36px;
+  border:1.5px solid rgba(90,255,194,0.4);
+  border-radius:50%;pointer-events:none;z-index:9998;
+  transform:translate(-50%,-50%);
+  transition:transform 0.18s ease,width 0.3s,height 0.3s,opacity 0.3s;
+}
+
+/* GRID BACKGROUND */
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:
+    linear-gradient(rgba(90,255,194,0.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(90,255,194,0.025) 1px,transparent 1px);
+  background-size:60px 60px;
+  pointer-events:none;z-index:0;
+}
+/* NOISE */
+body::after{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;opacity:0.5;
+}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:1.4rem 6%;
+  background:rgba(3,5,10,0.7);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.logo{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.6rem;font-weight:600;letter-spacing:0.02em;
+}
+.logo em{color:var(--accent);font-style:italic;}
+.nav-links{display:flex;gap:2.5rem;list-style:none;}
+.nav-links a{
+  color:var(--muted2);text-decoration:none;
+  font-size:0.82rem;font-weight:500;letter-spacing:0.04em;
+  text-transform:uppercase;transition:color 0.2s;
+}
+.nav-links a:hover{color:var(--text);}
+.nav-hire{
+  background:transparent;
+  border:1px solid var(--accent);
+  color:var(--accent);
+  padding:0.55rem 1.4rem;border-radius:50px;
+  font-size:0.82rem;font-weight:600;letter-spacing:0.06em;
+  text-transform:uppercase;text-decoration:none;
+  transition:background 0.25s,color 0.25s;
+}
+.nav-hire:hover{background:var(--accent);color:#000;}
+
+/* HERO */
+.hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:0 6%;padding-top:100px;
+  position:relative;z-index:1;overflow:hidden;
+}
+
+/* ORBS */
+.orb{
+  position:absolute;border-radius:50%;
+  filter:blur(80px);pointer-events:none;
+}
+.orb1{
+  width:500px;height:500px;
+  top:-100px;right:-80px;
+  background:radial-gradient(circle,rgba(90,255,194,0.15),transparent 70%);
+  animation:orbFloat 8s ease-in-out infinite;
+}
+.orb2{
+  width:400px;height:400px;
+  bottom:-100px;left:-60px;
+  background:radial-gradient(circle,rgba(77,184,255,0.12),transparent 70%);
+  animation:orbFloat 10s ease-in-out infinite reverse;
+}
+.orb3{
+  width:300px;height:300px;
+  top:40%;right:20%;
+  background:radial-gradient(circle,rgba(201,123,255,0.08),transparent 70%);
+  animation:orbFloat 12s ease-in-out infinite 2s;
+}
+@keyframes orbFloat{
+  0%,100%{transform:translate(0,0);}
+  33%{transform:translate(-20px,15px);}
+  66%{transform:translate(15px,-20px);}
+}
+
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  margin-bottom:2rem;width:fit-content;
+  animation:rise 0.7s ease both;
+}
+.eyebrow-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--accent);
+  box-shadow:0 0 12px var(--accent);
+  animation:blink 2s infinite;
+}
+@keyframes blink{0%,100%{opacity:1;box-shadow:0 0 12px var(--accent);}50%{opacity:0.4;box-shadow:none;}}
+.eyebrow-text{
+  font-size:0.78rem;font-weight:500;letter-spacing:0.12em;
+  text-transform:uppercase;color:var(--accent);
+}
+
+.hero-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(4rem,9vw,8.5rem);
+  font-weight:600;
+  line-height:0.95;
+  letter-spacing:-0.02em;
+  margin-bottom:0.2rem;
+  animation:rise 0.7s 0.1s ease both;
+}
+.hero-name .italic{font-style:italic;color:var(--accent);}
+
+.hero-title{
+  font-family:'Outfit',sans-serif;
+  font-size:clamp(0.9rem,1.6vw,1.15rem);
+  font-weight:300;
+  color:var(--muted2);
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  margin-bottom:2.5rem;
+  animation:rise 0.7s 0.2s ease both;
+}
+.hero-title strong{color:var(--text);font-weight:500;}
+
+.hero-desc{
+  max-width:500px;
+  font-size:1.05rem;
+  color:var(--muted2);
+  line-height:1.75;
+  margin-bottom:3rem;
+  font-weight:300;
+  animation:rise 0.7s 0.3s ease both;
+}
+.hero-desc strong{color:var(--text);font-weight:500;}
+
+.hero-ctas{
+  display:flex;gap:1rem;flex-wrap:wrap;
+  animation:rise 0.7s 0.4s ease both;
+}
+.cta-main{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--accent);color:#000;
+  padding:0.9rem 2rem;border-radius:50px;
+  font-weight:700;font-size:0.9rem;letter-spacing:0.04em;
+  text-decoration:none;
+  box-shadow:0 0 40px rgba(90,255,194,0.35);
+  transition:transform 0.2s,box-shadow 0.2s;
+}
+.cta-main:hover{transform:translateY(-3px);box-shadow:0 0 60px rgba(90,255,194,0.5);}
+.cta-ghost{
+  display:inline-flex;align-items:center;gap:8px;
+  border:1px solid var(--border2);color:var(--text);
+  padding:0.9rem 2rem;border-radius:50px;
+  font-weight:500;font-size:0.9rem;
+  text-decoration:none;
+  transition:border-color 0.2s,background 0.2s;
+}
+.cta-ghost:hover{border-color:var(--muted2);background:var(--surface);}
+
+.hero-scroll{
+  position:absolute;bottom:2.5rem;left:6%;
+  display:flex;align-items:center;gap:10px;
+  font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--muted);animation:rise 0.7s 0.7s ease both;
+}
+.scroll-line{
+  width:50px;height:1px;
+  background:linear-gradient(90deg,var(--muted),transparent);
+}
+
+/* MARQUEE */
+.marquee-wrap{
+  padding:1.5rem 0;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  overflow:hidden;background:var(--bg2);
+  position:relative;z-index:1;
+}
+.marquee-track{
+  display:flex;gap:0;
+  animation:marquee 20s linear infinite;
+  width:max-content;
+}
+.marquee-track:hover{animation-play-state:paused;}
+.marquee-item{
+  display:flex;align-items:center;gap:1rem;
+  padding:0 2rem;white-space:nowrap;
+  font-size:0.78rem;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--muted);font-weight:500;
+}
+.marquee-dot{color:var(--accent);font-size:0.5rem;}
+@keyframes marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+/* SECTIONS */
+section{padding:7rem 6%;position:relative;z-index:1;}
+.s-tag{
+  font-size:0.72rem;font-weight:600;letter-spacing:0.15em;
+  text-transform:uppercase;color:var(--accent);
+  display:inline-flex;align-items:center;gap:6px;margin-bottom:1rem;
+}
+.s-tag::before{content:'//';color:var(--muted);}
+.s-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2.2rem,4vw,3.8rem);
+  font-weight:600;letter-spacing:-0.01em;
+  line-height:1.1;margin-bottom:1rem;
+}
+.s-title em{font-style:italic;color:var(--accent);}
+.s-sub{color:var(--muted2);max-width:440px;font-size:0.95rem;margin-bottom:3.5rem;line-height:1.7;font-weight:300;}
+
+/* SERVICES */
+#services{background:var(--bg2);}
+.services-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(270px,1fr));
+  gap:1px;
+  border:1px solid var(--border);
+  border-radius:var(--r);overflow:hidden;
+}
+.svc{
+  background:var(--surface);
+  padding:2.2rem;
+  transition:background 0.3s;
+  position:relative;overflow:hidden;
+}
+.svc::after{
+  content:'';position:absolute;
+  top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  transform:scaleX(0);transform-origin:left;
+  transition:transform 0.4s ease;
+}
+.svc:hover{background:var(--surface2);}
+.svc:hover::after{transform:scaleX(1);}
+.svc-num{
+  font-family:'Cormorant Garamond',serif;
+  font-size:3rem;font-weight:600;
+  color:rgba(255,255,255,0.05);
+  position:absolute;top:1rem;right:1.5rem;
+  line-height:1;
+}
+.svc-icon{
+  font-size:1.6rem;margin-bottom:1.2rem;
+  display:block;
+}
+.svc h3{
+  font-family:'Outfit',sans-serif;
+  font-size:1rem;font-weight:700;
+  margin-bottom:0.6rem;letter-spacing:-0.01em;
+}
+.svc p{font-size:0.85rem;color:var(--muted2);line-height:1.65;margin-bottom:1.2rem;}
+.svc-price{
+  font-size:0.8rem;color:var(--accent);font-weight:600;
+  letter-spacing:0.05em;
+  display:inline-flex;align-items:center;gap:5px;
+}
+.svc-price::before{content:'→';}
+
+/* PROJECTS */
+.proj-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:1.5rem;
+}
+.proj-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--r);overflow:hidden;
+  transition:transform 0.35s,border-color 0.35s,box-shadow 0.35s;
+}
+.proj-card:hover{
+  transform:translateY(-6px);
+  border-color:rgba(90,255,194,0.2);
+  box-shadow:0 20px 60px rgba(0,0,0,0.4),0 0 0 1px rgba(90,255,194,0.08);
+}
+.proj-card.featured{grid-column:span 2;}
+.proj-thumb{
+  height:220px;display:flex;align-items:center;justify-content:center;
+  font-size:3.5rem;position:relative;overflow:hidden;
+}
+.proj-card.featured .proj-thumb{height:280px;}
+.th1{background:linear-gradient(135deg,#080d1a,#0d1a30);}
+.th2{background:linear-gradient(135deg,#08140a,#0d2412);}
+.th3{background:linear-gradient(135deg,#13070d,#250e1a);}
+.proj-thumb-label{
+  position:absolute;bottom:1rem;right:1rem;
+  font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;
+  background:rgba(255,255,255,0.06);border:1px solid var(--border2);
+  padding:0.3rem 0.7rem;border-radius:20px;color:var(--muted2);
+}
+.proj-body{padding:1.5rem;}
+.proj-body h3{
+  font-family:'Outfit',sans-serif;
+  font-size:1.05rem;font-weight:700;
+  margin-bottom:0.4rem;
+}
+.proj-body p{font-size:0.85rem;color:var(--muted2);margin-bottom:1.1rem;line-height:1.6;}
+.proj-tags{display:flex;gap:0.4rem;flex-wrap:wrap;}
+.ptag{
+  font-size:0.7rem;padding:0.25rem 0.65rem;border-radius:4px;
+  background:rgba(90,255,194,0.07);
+  border:1px solid rgba(90,255,194,0.15);
+  color:var(--accent);letter-spacing:0.04em;
+}
+
+/* ABOUT */
+#about{background:var(--bg2);}
+.about-wrap{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;}
+.about-left p{
+  font-size:0.95rem;color:var(--muted2);line-height:1.8;
+  margin-bottom:1rem;font-weight:300;
+}
+.about-left p strong{color:var(--text);font-weight:500;}
+.tools-wrap{margin-top:2rem;}
+.tools-label{
+  font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:0.8rem;
+}
+.tools-chips{display:flex;flex-wrap:wrap;gap:0.5rem;}
+.chip{
+  font-size:0.78rem;padding:0.35rem 0.85rem;border-radius:6px;
+  background:var(--surface2);border:1px solid var(--border2);
+  color:var(--muted2);transition:border-color 0.2s,color 0.2s;
+}
+.chip:hover{border-color:var(--accent);color:var(--accent);}
+.about-right{}
+.skill-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r);padding:2rem;
+}
+.skill-list{display:flex;flex-direction:column;gap:1.4rem;}
+.skl-row{}
+.skl-top{
+  display:flex;justify-content:space-between;
+  font-size:0.85rem;margin-bottom:0.5rem;
+}
+.skl-pct{color:var(--accent);font-weight:600;}
+.skl-bar{
+  height:3px;background:rgba(255,255,255,0.06);
+  border-radius:2px;overflow:hidden;
+}
+.skl-fill{
+  height:100%;border-radius:2px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  transform-origin:left;
+  animation:grow 1.4s cubic-bezier(.23,1,.32,1) both;
+}
+@keyframes grow{from{transform:scaleX(0);}to{transform:scaleX(1);}}
+
+/* CONTACT */
+#contact{text-align:center;}
+.contact-inner{max-width:620px;margin:0 auto;}
+.contact-inner .s-title{font-size:clamp(2.5rem,5vw,4.5rem);}
+.contact-inner p{
+  font-size:1rem;color:var(--muted2);margin-bottom:3rem;
+  font-weight:300;line-height:1.7;
+}
+.contact-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:1rem;margin-bottom:2rem;
+}
+.c-card{
+  display:flex;flex-direction:column;align-items:center;gap:0.6rem;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r);padding:1.6rem;
+  text-decoration:none;color:var(--text);
+  transition:border-color 0.3s,transform 0.3s,background 0.3s;
+}
+.c-card:hover{
+  border-color:var(--accent);
+  background:var(--surface2);
+  transform:translateY(-4px);
+}
+.c-icon{font-size:1.8rem;}
+.c-label{font-size:0.78rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:0.2rem;}
+.c-val{font-size:0.9rem;font-weight:500;}
+.c-card.wa{border-color:rgba(37,211,102,0.2);}
+.c-card.wa:hover{border-color:rgba(37,211,102,0.6);}
+
+/* FOOTER */
+footer{
+  border-top:1px solid var(--border);
+  padding:2rem 6%;
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:0.78rem;color:var(--muted);
+  position:relative;z-index:1;
+}
+footer .f-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.1rem;color:var(--text);font-style:italic;
+}
+footer .f-name em{color:var(--accent);}
+
+/* ANIMATIONS */
+@keyframes rise{
+  from{opacity:0;transform:translateY(28px);}
+  to{opacity:1;transform:translateY(0);}
+}
+.reveal{
+  opacity:0;transform:translateY(30px);
+  transition:opacity 0.7s ease,transform 0.7s ease;
+}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+@media(max-width:900px){
+  .nav-links{display:none;}
+  .proj-grid{grid-template-columns:1fr;}
+  .proj-card.featured{grid-column:span 1;}
+  .about-wrap{grid-template-columns:1fr;gap:2.5rem;}
+  .contact-grid{grid-template-columns:1fr;}
+  footer{flex-direction:column;gap:0.5rem;text-align:center;}
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cur"></div>
+<div class="cursor-ring" id="ring"></div>
+
+<nav>
+  <div class="logo">Pro<em>mod</em></div>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="nav-hire">Hire Me</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+
+  <div class="hero-eyebrow">
+    <div class="eyebrow-dot"></div>
+    <span class="eyebrow-text">Available for freelance · Bangalore, India</span>
+  </div>
+
+  <h1 class="hero-name">
+    Pro<span class="italic">mod.</span>
+  </h1>
+
+  <p class="hero-title">
+    Web Developer &nbsp;·&nbsp; <strong>AI Tools Specialist</strong> &nbsp;·&nbsp; BCA (AI/ML)
+  </p>
+
+  <p class="hero-desc">
+    I build <strong>modern, fast websites</strong> for small businesses and startups — powered by cutting-edge AI tools. Get a professional web presence without the agency price tag.
+  </p>
+
+  <div class="hero-ctas">
+    <a href="#projects" class="cta-main">View My Work ↗</a>
+    <a href="#contact" class="cta-ghost">Let's Talk →</a>
+  </div>
+
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    Scroll to explore
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track" id="mq">
+    <span class="marquee-item">Website Design<span class="marquee-dot">●</span></span>
+    <span class="marquee-item">AI Web Apps<span class="marquee-dot">●</span></span>
+    <span class="marquee-item">Landing Pages<span class="marquee-dot">●</span></span>
+    <span class="marquee-item">Fast Delivery<span class="marquee-dot">●</span></span>
+    <span class="marquee-item">Affordable Pricing<span class="marquee-dot">●</span></span>
+    <span class="marquee-item">Bangalore Based<span class="marquee-dot">●</span></span>
+    <span class="marquee-item">Claude AI Powered<span class="marquee-dot">●</span></span>
+    <span class="marquee-item">Mobile Responsive<span class="marquee-dot">●</span></span>
+    <span class="marquee-item">Website Design<span class="marquee-dot">●</span></span>
+    <span class="marquee-item">AI Web Apps<span class="marquee-dot">●</span></span>
+    <span class="marquee-item">Landing Pages<span class="marquee-dot">●</span></span>
+    <span class="marquee-item">Fast Delivery<span class="marquee-dot">●</span></span>
+    <span class="marquee-item">Affordable Pricing<span class="marquee-dot">●</span></span>
+    <span class="marquee-item">Bangalore Based<span class="marquee-dot">●</span></span>
+    <span class="marquee-item">Claude AI Powered<span class="marquee-dot">●</span></span>
+    <span class="marquee-item">Mobile Responsive<span class="marquee-dot">●</span></span>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="s-tag">What I Offer</div>
+  <h2 class="s-title">Services <em>built</em><br>for real results</h2>
+  <p class="s-sub">Fast turnaround, clean code, and designs that actually work — for a fraction of agency prices.</p>
+  <div class="services-grid reveal">
+    <div class="svc">
+      <span class="svc-num">01</span>
+      <span class="svc-icon">🌐</span>
+      <h3>Business Website</h3>
+      <p>Clean, modern multi-page website for your shop, clinic, or service. Mobile-first and fast-loading.</p>
+      <span class="svc-price">Starting ₹3,000</span>
+    </div>
+    <div class="svc">
+      <span class="svc-num">02</span>
+      <span class="svc-icon">🚀</span>
+      <h3>Landing Page</h3>
+      <p>One-page site designed to convert visitors into customers. Perfect for promotions or new services.</p>
+      <span class="svc-price">Starting ₹2,000</span>
+    </div>
+    <div class="svc">
+      <span class="svc-num">03</span>
+      <span class="svc-icon">🤖</span>
+      <h3>AI-Powered Web App</h3>
+      <p>Interactive tools, chatbots, or smart features for your website — built with the latest AI models.</p>
+      <span class="svc-price">Starting ₹5,000</span>
+    </div>
+    <div class="svc">
+      <span class="svc-num">04</span>
+      <span class="svc-icon">✏️</span>
+      <h3>Website Editing & Fixes</h3>
+      <p>Already have a site? I'll fix bugs, update content, improve speed, or redesign any section.</p>
+      <span class="svc-price">Starting ₹800</span>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="s-tag">Portfolio</div>
+  <h2 class="s-title">Recent <em>work</em></h2>
+  <p class="s-sub">Sample projects showing the quality I deliver for every client.</p>
+  <div class="proj-grid">
+    <div class="proj-card featured reveal">
+      <div class="proj-thumb th1">
+        🍽️
+        <div class="proj-thumb-label">Featured Project</div>
+      </div>
+      <div class="proj-body">
+        <h3>Spice Route Restaurant — Website</h3>
+        <p>A modern, mobile-first website for a local Bangalore restaurant. Includes full menu, photo gallery, Google Maps embed, and a WhatsApp order button.</p>
+        <div class="proj-tags">
+          <span class="ptag">HTML/CSS</span>
+          <span class="ptag">JavaScript</span>
+          <span class="ptag">Responsive</span>
+          <span class="ptag">AI-Built</span>
+          <span class="ptag">WhatsApp CTA</span>
+        </div>
+      </div>
+    </div>
+    <div class="proj-card reveal">
+      <div class="proj-thumb th2">💆</div>
+      <div class="proj-body">
+        <h3>Glow Beauty Salon</h3>
+        <p>Service showcase and booking site for a beauty salon, with pricing table and Instagram feed.</p>
+        <div class="proj-tags">
+          <span class="ptag">Landing Page</span>
+          <span class="ptag">Mobile</span>
+          <span class="ptag">Booking CTA</span>
+        </div>
+      </div>
+    </div>
+    <div class="proj-card reveal">
+      <div class="proj-thumb th3">📚</div>
+      <div class="proj-body">
+        <h3>Tutor Portfolio Site</h3>
+        <p>Personal portfolio for a private tutor with subject list, student testimonials, and contact form.</p>
+        <div class="proj-tags">
+          <span class="ptag">Portfolio</span>
+          <span class="ptag">Contact Form</span>
+          <span class="ptag">SEO Ready</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="s-tag">About Me</div>
+  <div class="about-wrap">
+    <div class="about-left reveal">
+      <h2 class="s-title">Promod — <br><em>Developer</em> &<br>AI Specialist</h2>
+      <p>I'm a <strong>BCA (AI/ML) student</strong> in my 3rd year from Bangalore. I build websites for small businesses and individuals — combining clean design with the power of modern AI tools.</p>
+      <p>Using AI, I deliver websites <strong>faster and smarter</strong> than traditional methods — meaning lower prices and quicker turnarounds for you.</p>
+      <p>My belief: every local business deserves a <strong>professional online presence</strong> without spending a fortune. That's exactly what I provide.</p>
+      <div class="tools-wrap">
+        <div class="tools-label">Tools & Technologies</div>
+        <div class="tools-chips">
+          <span class="chip">HTML / CSS</span>
+          <span class="chip">JavaScript</span>
+          <span class="chip">Claude AI</span>
+          <span class="chip">GitHub</span>
+          <span class="chip">Vercel</span>
+          <span class="chip">Responsive Design</span>
+          <span class="chip">Figma Basics</span>
+          <span class="chip">SEO Basics</span>
+        </div>
+      </div>
+    </div>
+    <div class="about-right reveal">
+      <div class="skill-card">
+        <div class="skill-list">
+          <div class="skl-row">
+            <div class="skl-top"><span>Website Building</span><span class="skl-pct">90%</span></div>
+            <div class="skl-bar"><div class="skl-fill" style="width:90%"></div></div>
+          </div>
+          <div class="skl-row">
+            <div class="skl-top"><span>AI Tools Usage</span><span class="skl-pct">95%</span></div>
+            <div class="skl-bar"><div class="skl-fill" style="width:95%"></div></div>
+          </div>
+          <div class="skl-row">
+            <div class="skl-top"><span>Responsive Design</span><span class="skl-pct">85%</span></div>
+            <div class="skl-bar"><div class="skl-fill" style="width:85%"></div></div>
+          </div>
+          <div class="skl-row">
+            <div class="skl-top"><span>Landing Pages</span><span class="skl-pct">88%</span></div>
+            <div class="skl-bar"><div class="skl-fill" style="width:88%"></div></div>
+          </div>
+          <div class="skl-row">
+            <div class="skl-top"><span>Fast Delivery</span><span class="skl-pct">100%</span></div>
+            <div class="skl-bar"><div class="skl-fill" style="width:100%"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-inner">
+    <div class="s-tag" style="justify-content:center">Get In Touch</div>
+    <h2 class="s-title reveal">Let's build<br><em>something great.</em></h2>
+    <p class="reveal">Need a website for your business? I'll get it done fast and affordably. Reach out on WhatsApp for the quickest response — I reply within a few hours.</p>
+    <div class="contact-grid reveal">
+      <a href="https://wa.me/918431721642" class="c-card wa" target="_blank">
+        <span class="c-icon">💬</span>
+        <span class="c-label">WhatsApp</span>
+        <span class="c-val">+91 84317 21642</span>
+      </a>
+      <a href="mailto:livingofart19@gmail.com" class="c-card">
+        <span class="c-icon">✉️</span>
+        <span class="c-label">Email</span>
+        <span class="c-val">livingofart19@gmail.com</span>
+      </a>
+      <a href="https://github.com/lrpromod-arch" class="c-card" target="_blank">
+        <span class="c-icon">🐙</span>
+        <span class="c-label">GitHub</span>
+        <span class="c-val">lrpromod-arch</span>
+      </a>
+      <a href="https://www.fiverr.com" class="c-card" target="_blank">
+        <span class="c-icon">🟢</span>
+        <span class="c-label">Fiverr</span>
+        <span class="c-val">Coming Soon</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span class="f-name">Pro<em>mod</em></span>
+  <span>© 2026 · Bangalore, India</span>
+  <span>Built with AI · Delivered with care ✦</span>
+</footer>
+
+<script>
+// CURSOR
+const cur = document.getElementById('cur');
+const ring = document.getElementById('ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY;
+  cur.style.left=mx+'px';cur.style.top=my+'px';
+});
+function animRing(){
+  rx+=(mx-rx)*0.12; ry+=(my-ry)*0.12;
+  ring.style.left=rx+'px';ring.style.top=ry+'px';
+  requestAnimationFrame(animRing);
+}
+animRing();
+document.querySelectorAll('a,button').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{
+    cur.style.width='18px';cur.style.height='18px';
+    ring.style.width='54px';ring.style.height='54px';
+  });
+  el.addEventListener('mouseleave',()=>{
+    cur.style.width='10px';cur.style.height='10px';
+    ring.style.width='36px';ring.style.height='36px';
+  });
+});
+
+// SCROLL REVEAL
+const obs = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}
+  });
+},{threshold:0.12});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
